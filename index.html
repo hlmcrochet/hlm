@@ -31,5 +31,18 @@
             <a href="tel:+447704906412"><i class="fas fa-phone"></i></a>
         </div>
     </header>
+
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+
 </body>
 </html>
