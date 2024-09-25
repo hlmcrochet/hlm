@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Editor</title>
+    <link rel="stylesheet" href="/grapes.min.css">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; }
+        #editor { height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="editor"></div>
+
+    <script src="/grapes.min.js"></script>
+    <script>
+        const editor = grapesjs.init({
+            container: '#editor',
+            fromElement: true,
+            height: '100vh',
+            width: 'auto',
+            storageManager: false,
+            blockManager: {
+                appendTo: '#blocks',
+                blocks: [
+                    { id: 'block-h1', label: 'Heading 1', content: '<h1>Heading 1</h1>', category: 'Basic' },
+                    { id: 'block-p', label: 'Paragraph', content: '<p>Insert your text here</p>', category: 'Basic' },
+                    { id: 'block-img', label: 'Image', content: `<img src="/images/placeholder1.jpg" alt="image" style="width:100%">`, category: 'Basic' },
+                    { id: 'block-figure', label: 'Figure', content: `<figure><img src="/images/placeholder2.jpg" alt="image" style="width:100%"><figcaption>Caption here</figcaption></figure>`, category: 'Basic' },
+                ]
+            }
+        });
+
+        // Save button to commit changes
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save Changes';
+        saveButton.style.position = 'absolute';
+        saveButton.style.top = '10px';
+        saveButton.style.right = '10px';
+        saveButton.onclick = async () => {
+            const html = editor.getHtml();
+            const css = editor.getCss();
+            const res = await fetch('/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ html, css })
+            });
+            const result = await res.json();
+            alert(result.message);
+        };
+        document.body.appendChild(saveButton);
+
+        // Auto logout on page reload or exit
+        window.onbeforeunload = () => {
+            fetch('/logout');
+        };
+    </script>
+</body>
+</html>
