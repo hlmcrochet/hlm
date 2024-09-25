@@ -1,7 +1,7 @@
-const express = require('express');
-const passport = require('passport');
-const GitHubStrategy = require('passport-github').Strategy;
-require('dotenv').config();  // to load environment variables
+const express = require('../../express');
+const passport = require('../../passport');
+const GitHubStrategy = require('../../passport-github').Strategy;
+require('../../.env').config();  // to load environment variables
 
 const app = express();
 const port = process.env.PORT || 3000;
